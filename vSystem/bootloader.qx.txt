@@ -1,0 +1,41 @@
+*normal commenting even for this bootloader*
+
+init::bootloader::as {
+    *initialize system memory*
+    BITS 1024;
+    ORG 0x1000;
+
+    *initialize qubits before kernel load*
+    _Qubit::Array[200][5];
+    _Qubit::status::current: {"Cooled"};
+    _Qubit::coherence::Normal;
+
+    *set initial room temperature for qubit stability*
+    _RoomTemp::"22" in[Celcius];
+
+    *load kernels*
+    _kernel::load::kernel.qx;
+    _kernel::load::vKernel.qx;
+
+    *load QPU*
+    _QPU::init::accelerator.qx;
+
+    *prepare prebuilt packages*
+    _%pkg%::load::print.qx;
+};
+
+run::bootloader {
+    *check system integrity*
+    IF _Qubit::coherence == Normal || _Kernel::status == Loaded {
+        _Kernel::activate;
+        _QPU::activate;
+        Qubit.print("vSystem boot successful!");
+    } || else {
+        Qubit.print("bootloader failed! - decoherence detected");
+        _Qubit::store.coherence(Normal);
+        bootloader.hang; then::[restart]
+        [restart] bootloader.restart;
+        bootloader.loop until::Normal; *this mean its gonna loop until it reaches Normal state*
+    };
+    return 0;
+};

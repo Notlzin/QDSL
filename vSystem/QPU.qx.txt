@@ -1,0 +1,40 @@
+*QPU.qx*
+init::global::as: {
+    BITS 1024
+    ORG 0x1000
+};
+
+init::QPU::as: {
+    mov qReg OF: ax, bx;
+    jmp qReg OF: bx, dx;
+    (after): jmp: back TO: dx => cx;
+    (exe): mov qReg OF: (num)x => (num+1)x;
+    (Qubits): store.coherence(Normal);
+    (Observation || Heat): store.decohere(qubits => state: null);
+    reg qReg ek, qk as: ax - zx in::between;
+    tr ax, cx = hk; *tr means transform*
+    (array): Qubit.array(Normal || state: null);
+    (algo): fast qReg OF: ax - zk in::between when: Qubit.state(Normal);
+    (algoDe): int qReg OF: ax -zk in::between when: Qubit.state(null);
+    (accel): activate::accelerator.qx IF QPU.qx == True;
+    mov reg 0x1000 => 0x2000;
+};
+
+*main loop*
+run::QPU {
+    when: QPU.activate {
+        IF QPU.load; == |1⟩: inverse(QPU.load);
+        || else QPU.load; == |0⟩: QPU.hang; till: QPU.restart;
+        return 1;
+    };
+    QPU.accelerator {
+        __hyper__[QPU][accelerator] { return: accelerator.activate; };
+        __hyper__[base=Activated] = 1; *because who loves double activation, if one break errors*
+    } IF __hyper__[base=Deactivated] = 1 || __hyper__[base=Activated] = 0 {
+        return Qubit.print("error on:", err.message);
+        return 1
+    } || else {
+        return Qubit.print("something probably decohered!!!!");
+    };
+    return 0;
+};

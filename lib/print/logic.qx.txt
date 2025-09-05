@@ -1,0 +1,67 @@
+activate::Comments{src="*" using namevector::Q, mode:Permanent};
+
+*initializing the same way as before*
+|
+|_init::QuantumComp::ofQ$(qubit=1000) {
+|
+|*set=Normal means that its a normal set of 0's and 1's, it can also go full octal*
+|
+|_inBetween::Qubits[set=Normal];
+|
+|_Qubit::simulationOverheat[default];
+|
+|_Qubit::simulation::FastForward[default]; *default means that its deactivated, and for simulationOverheat its true for default*
+|
+|_Qubit:Array[200][5]; *this means every 200 qubits it splits into 5 different groups, that means there are over 25 different groups*
+|
+|_Algorithm::[Grovers]; *using grovers algorithm*
+|
+|_Qubit::status::current: {"Cooled"};
+|
+|_after{ init::Return QuantumComp(): True };
+|
+|_set::State(|0⟩)
+|
+|_QuantumComp::CompPower[pow="100"];
+|
+|_RoomTemp::"-19" in[Kelvin];
+
+};
+
+init::void:["print"] {
+    main::definition::[print]; ---
+	|____________________________|
+	|
+	|_input::Include(Qubit_data => Qubit_str["=Qubit[input]::=Qubit[output], n(amount.of::(Qubit[]))]);--\
+	|                                                                                                    data.To::void:["print"];
+	|_output::Exclude::!Input || input.Qubit::request(input=0); -----------------------------------------/
+	|                                                        |
+	|_data::ADD input, output || =[output, input];___________| *this means that data is connected with [input, output]        
+	|
+	|_storage::Qubit.arrayStorage[input, output => Qubit::parsed(data="Str"), inf]; *"Str" means that it has to return string, or set to default for cross compatibility and inf meaning infinitely storaged*
+	|
+	|_qubitArray::cohere([input, output] => [data, storage]);
+	|
+	|_void:["parsed"]::Qubit.translate(input, output)[0][1];
+	|
+	|_void:[(), ""]::parsed(output) == output;
+	|
+	|_num::Qubit.number(str) => [input, output].num;
+	|
+	|_regex::[":;''"",.<>/?\|!@#$%^&*()-+=_[]{}`~"]::filter::Qubit.filter(regex::[input, output]);
+    2nd::definition::[print] = { Qubit.array(); };
+	|
+	|_printArray::print(Qubit.array(num_1, num_2 ... num_i));
+    3rd::definition::[print] = { state: |Ψ⟩ = |a⟩ + |b⟩ };
+	|
+	|_eval[based.on::state]::input;
+	|
+	|_cohere(eval)::Qubit.cohere();
+	|
+	|_parse(state) => Qubit.filter("|, ⟩");
+    4th::compile::[print] => {
+	     init::print() == |1⟩;
+	     void::["print"].chain::print.to(main, 2nd, 3rd, 4th);
+	};
+	return 0;
+};

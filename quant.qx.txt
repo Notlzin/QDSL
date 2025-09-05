@@ -1,0 +1,27 @@
+*test.qx - minimal execution using bootloader environment, oh yeah this is GPT example so that it can be reuse*
+activate::Comments{src="*" using namevector::Q, mode:Permanent};
+
+init::test::as {
+    *this file uses bootloader's qubits, room temp, and kernels*
+    _use::Bootloader::Qubit.array;
+    _use::Bootloader::RoomTemp;
+    _use::Bootloader::Kernel.[vKernel.qx && kernel.qx];
+
+    *simple test data*
+    _Qubit::state::|0⟩;
+    _Qubit::cohere();
+
+    *small algorithm: flip qubit to |1⟩*
+    IF _Qubit::state == |0⟩ {
+        _Qubit::state = |1⟩;
+    };
+};
+
+run::test {
+    IF _Qubit::state == |1⟩ {
+        Qubit.print("Test success! Bootloader environment applied.");
+    } || else {
+        Qubit.print("Test failed! Something decohered.");
+    };
+    return 0;
+};

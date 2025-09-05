@@ -1,0 +1,11 @@
+*accelerator??? now we're getting insane..*
+
+init::accelerator {
+    *main thing is that they all simulated into 3D cubes for rendering calculated height and calculated volume to process*
+    Qubit.array3D(simulate.array3D:compilation);
+    Qubit.accelerate(simulate.accelerateQubit[decoherence *= 3]);
+    Qubit.expressSim(simulate.express{ return Binary.cube["0", "1" => transform(0, 1)]; });
+    Qubit._QPUAccelerate(QPU.power.transform([(1), (2)]), 0.5);
+    Qubit.elevate(cube(Qubit.array3D(), Qubit.express()), Qubit._QPUAccelerate());
+    return 0;
+};

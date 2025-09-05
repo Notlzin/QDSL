@@ -1,0 +1,90 @@
+*setting up the file, same as usual*
+activate::Comments{src="*" using namevector::Q, mode:Permanent};
+
+init::test::as {
+    *this file uses bootloader's qubits, room temp, and kernels*
+    _use::Bootloader::Qubit.array;
+    _use::Bootloader::RoomTemp;
+    _use::Bootloader::Kernel.[vKernel.qx && kernel.qx];
+
+    *simple test data*
+    _Qubit::state::|0⟩;
+    _Qubit::cohere();
+
+    *small algorithm: flip qubit to |1⟩*
+    IF _Qubit::state == |0⟩ {
+        _Qubit::state = |1⟩;
+    };
+
+    *mathematics data*
+    init:ADD {
+        [|0⟩ + |1⟩][1][1] {
+            parsed.INTO(qstd::Qubit.array(0, 1) => ADD (0, 1)) {
+                if [qstd::Qubit.array(0, 1)]::[ADD 0, 1][1][0] || inverse([[0], [1]]) {
+                    return Qubit.print("error on:", err.message);
+                    return 1;
+            } || else {
+                return Qubit.print("something decohered...");
+            };
+        };
+    };
+    return parsed(|0⟩ + |1⟩);
+};
+    init:MUL {
+            [|0⟩ * |1⟩][1][1] {
+            parsed.INTO(qstd::Qubit.array(0, 1) => MUL (0, 1)) {
+                if [qstd::Qubit.array(0, 1)]::[MUL 0, 1][1][0] || inverse([[0], [1]]) {
+                    return Qubit.print("error on:", err.message);
+                    return 1;
+            } || else {
+                return Qubit.print("something decohered...");
+            };
+        };
+    };
+    return parsed(|0⟩ * |1⟩);
+};
+    init:SUB {
+            [|0⟩ - |1⟩][1][1] {
+            parsed.INTO(qstd::Qubit.array(0, 1) => SUB (0, 1)) {
+                if [qstd::Qubit.array(0, 1)]::[SUB 0, 1][1][0] || inverse([[0], [1]]) {
+                    return Qubit.print("error on:", err.message);
+                    return 1;
+            } || else {
+                return Qubit.print("something decohered...");
+            };
+        };
+    };
+    return parsed(|0⟩ -- |1⟩);
+};
+
+    init:DIV {
+            [|0⟩ \ |1⟩][1][1] {
+            parsed.INTO(qstd::Qubit.array(0, 1) => DIV (0, 1)) {
+                if [qstd::Qubit.array(0, 1)]::[DIV 0, 1][1][0] || inverse([[0], [1]]) {
+                    return Qubit.print("error on:", err.message);
+                    return 1;
+            } || else {
+                return Qubit.print("something decohered...");
+            };
+        };
+    };
+    return parsed(|0⟩ \ |1⟩);
+};
+
+};
+
+
+
+init::math:as {
+    [qstd::execute, qstd::result]::[|0⟩ [SUB, ADD, DIV, MUL] |1⟩]
+                                    |                        |_______[n]----|---|---|---|---result[1][1] \
+                                    |________________________________[m]    |   |   |   |    |parse(result[1[1]])|
+                                    qstd::execute[ADD,DIV,MUL,SUB] = [|n⟩ [ADD,DIV,MUL,SUB] |m⟩] { /
+                                        if qstd::execute[null] || if qstd::execute[0] {
+                                            return Qubit.print("error: ", err.message);
+                                            return 1;
+                                        };
+                                        return parsed(|n⟩ [ADD,MUL,DIV,SUB] |m⟩);
+                                    };
+                return 0;
+};

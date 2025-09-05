@@ -1,0 +1,44 @@
+activate::Comments{src="*" using namevector::Q, mode:Permanent};
+
+*initializing the same way as before*
+|
+|_init::QuantumComp::ofQ$(qubit=1000) {
+|
+|*set=Normal means that its a normal set of 0's and 1's, it can also go full octal*
+|
+|_inBetween::Qubits[set=Normal];
+|
+|_Qubit::simulationOverheat[default];
+|
+|_Qubit::simulation::FastForward[default]; *default means that its deactivated, and for simulationOverheat its true for default*
+|
+|_Qubit:Array[200][5]; *this means every 200 qubits it splits into 5 different groups, that means there are over 25 different groups*
+|
+|_Algorithm::[Grovers]; *using grovers algorithm*
+|
+|_Qubit::status::current: {"Cooled"};
+|
+|_after{ init::Return QuantumComp(): True };
+|
+|_set::State(|0⟩)
+|
+|_QuantumComp::CompPower[pow="100"];
+|
+|_RoomTemp::"-19" in[Kelvin];
+
+};
+
+init::void["init"] {[
+    initialize::math[];
+    |
+    |_initialize: init_void::["math"];
+    |
+    |_after::initialize::Launch.pkg(void::["math"]);
+]};
+
+Qubit.init == Qubit.start (
+    (%initialize::pkg% end::initialize)[1][1] {
+        || else: return Qubit.GiveErr(err);
+    };
+    return 0;
+);

@@ -1,0 +1,51 @@
+*algo.qx.txt - Global Grover Algorithm Package, note: this is built by GPT but i'll try making it more legitemate*
+activate::Comments{src="*" using namevector::Q, mode:Permanent};
+
+init::Grover::as {
+    *uses bootloader qubits and environment*
+    _use::Bootloader::Qubit.array;
+    _use::Bootloader::RoomTemp;
+    _use::Bootloader::Kernel.[vKernel.qx && kernel.qx];
+
+    *initial state setup*
+    _Qubit::state::|0⟩;
+    _Qubit::cohere();
+
+    *Grover parameters*
+    _Grover::oracle = { mark_state:AS(|1⟩) }; *marks |1⟩ as target*
+    _Grover::iterations = ceil(sqrt(_Qubit.array().length(Qubit.basedON(Qubit.array())))); *O(√N) conceptual iterations*
+};
+
+init::Grover::execute {
+    FOR i IN 1.._Grover::iterations {
+        *apply oracle*
+        IF _Qubit.state == |1⟩ {
+            phase_flip(_Qubit); *flip sign of marked state*
+        };
+
+        *diffusion operator / amplitude amplification*
+        mean_amplitude = average(_Qubit.array);
+        FOR q IN _Qubit.array {
+            q.state = 2*mean_amplitude - q.state;
+        };        |
+                  |      
+        _Qubit::cohere(); *ensure qubits remain coherent*
+    };
+};
+
+run::Grover {
+    init::Grover::AS(Grover);
+    init::Grover::execute;
+
+    *return results conceptually*
+    Qubit.print("Grover search complete. Target states marked:", find_marked(_Qubit.array)) {
+        IF _Qubit::decohere() {
+            return Qubit.print("qubit decohered! grover hanged.");
+            Grover.hang;
+        } || else {
+            return Qubit.print("error on:", err.message);
+            return 1;
+        }
+    };
+    return 0;
+};

@@ -1,0 +1,33 @@
+*comments are instantly enabled when creating kernels like this*
+init::global::as: {
+    BITS 1024
+    ORG 0x1000
+};
+
+init::qKernel::as: {
+    mov qReg OF: ax, bx;
+    jmp qReg OF: bx, dx;
+    (after): jmp: back TO: dx => cx;
+    (exe): mov qReg OF: (num)x => (num+1)x;
+    (Qubits): store.coherence(Normal);
+    (Observation || Heat): store.decohere(qubits => state: null);
+    reg qReg ek, qk as: ax - zx in::between;
+    tr ax, cx = hk; *tr means transform*
+    (array): Qubit.array(Normal || state: null);
+    (algo): fast qReg OF: ax - zk in::between when: Qubit.state(Normal);
+    (algoDe): int qReg OF: ax -zk in::between when: Qubit.state(null);
+};
+
+run::qKernel {
+    if kernel.activate {
+        Qubit.chance(|0⟩ XOR |1⟩); *this happens randomly or in between which will cause crashes*
+        IF |1⟩ || pass: run.(exe) == True;
+        IF |0⟩ || fail: hang.(exe) == True;
+    } || else {
+        IF |0⟩ + |1⟩ {
+            Qubit.print(err.message); *err.message means if its 0 and 1 it will crash*
+            qKernel.crash;
+        };
+    };
+    return 0;
+};
