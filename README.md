@@ -33,7 +33,8 @@ IF _Qubit::state == |0⟩ {
 };
 _Qubit::algo[1][1][1];  *activates Grover algorithm*
 ```
-license
+## License
+
 MIT license, feel free to explore deeper about Q$, or fork Q$
 
 ---
