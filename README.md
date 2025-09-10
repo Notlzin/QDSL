@@ -1,6 +1,6 @@
 # Q$
 
-Q$ is basically text based **quantum computing inspired DSL**, and its a **toy programming language** with conceptual quantum computer components like: **kernels, bootloaders, QPU and Grover's Algorithm**, **Note:** this isnt a real quantum computing based programming language.
+Q$ is basically text based **quantum computing inspired DSL**, and its a **toy programming language** with conceptual quantum computer components like: **kernels, bootloaders, QPU and Grover's Algorithm**, **Note:** this isnt a real quantum computing based programming language and also, the syntax is **not** **quantum computing accurate** so take it with a grain of salt.
 
 ---
 
